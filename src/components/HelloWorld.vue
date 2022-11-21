@@ -12,13 +12,13 @@
         </el-option>
       </el-select>
     </div>
-    <div class="side">
+    <!-- <div class="side">
       <el-radio-group v-model="sideRadio" @input="getSideValue">
       <el-radio  label="buy">买</el-radio>
       <el-radio  label="sell">卖</el-radio>
       </el-radio-group>
-    </div>
-    <div class="type_price">
+    </div> -->
+    <!-- <div class="type_price">
     <div class="orderType">
       <el-radio-group v-model="typeRadio" @input="getTypeValue">
       <el-radio label="market">市价</el-radio>
@@ -26,11 +26,11 @@
       </el-radio-group>
     </div>
     <div class="price" v-if="isLimit"><el-input v-model="price" placeholder="请输入限价"></el-input></div>
-    </div>
-    <div class="amount">
+    </div> -->
+    <!-- <div class="amount">
       <p>购买数量:<p/>
       <div class="input_amount"><el-input v-model="amount" placeholder="请输入购买数量"></el-input></div>
-    </div>
+    </div> -->
      <div class="amount">
       <p>输入杠杠倍数:<p/>
       <div class="input_amount"><el-input v-model="level" placeholder="请输入杠杆倍数"></el-input></div>
@@ -41,7 +41,7 @@
       <el-radio   label="cross">全仓</el-radio>
       </el-radio-group>
     </div>
-    <div class="tp_sl">
+    <!-- <div class="tp_sl">
       <p class="set_tl">止盈/止损</p>
         <el-switch
         v-model="tpSlValue"
@@ -51,7 +51,7 @@
         </el-switch>
       <div class="input_tp" v-if="isTPSl"><el-input v-model="tpPrice" placeholder="止盈价格"></el-input></div>
       <div class="input_sl" v-if="isTPSl"><el-input v-model="slPrice" placeholder="止损价格"></el-input></div>
-    </div>
+    </div> -->
     <div class="message_button">
       <el-button type="warning" plain @click="generateAlertMessage">生成Alert Mesage</el-button>
     </div>
@@ -124,14 +124,14 @@
        var message={
             "apiSec":"5BFasdasdtNg7hwkgCzYQMJSDHDSHD2qOzmtldJasdc",
             "symbol":"ADA-USDT-SWAP",
-            "amount":"2",
+            "amount":"{{strategy.market_position_size}}",
             "type":"market",
-            "side":"buy",
+            "side":"{{strategy.order.action}}",
             "price":"",
             "tdMode":"isolated",
-            "level":"3",
-            "enable_stop_loss":true,
-            "enable_stop_gain":true,
+            "level":"1",
+            "enable_stop_loss":false,
+            "enable_stop_gain":false,
             "slTriggerPx":"",
             "tpTriggerPx":""
         }
@@ -144,39 +144,39 @@
           return
         }
         //买卖方向判断
-        if(this.sideRadio != null && this.sideRadio != ""){
-          message.side = this.sideRadio
-        }else{
-          this.$message.error('请选择交易方向:买or卖');
-          return
-        }
+        // if(this.sideRadio != null && this.sideRadio != ""){
+        //   message.side = this.sideRadio
+        // }else{
+        //   this.$message.error('请选择交易方向:买or卖');
+        //   return
+        // }
         //市场价还是限价判断
-        if(this.typeRadio !=null &&this.typeRadio != ""){
-          if(this.typeRadio=="limit"){
-            message.type = "limit"
-          }else{
-            message.type = "market"
-          }
-        }else{
-          this.$message.error('请选择交易类型:市价or限价');
-          return
-        }
+        // if(this.typeRadio !=null &&this.typeRadio != ""){
+        //   if(this.typeRadio=="limit"){
+        //     message.type = "limit"
+        //   }else{
+        //     message.type = "market"
+        //   }
+        // }else{
+        //   this.$message.error('请选择交易类型:市价or限价');
+        //   return
+        // }
         //如果是限价，对价格进行判断
-        if(this.typeRadio == "limit"){
-          if(this.price !=null&&this.price !=""){
-            message.price = this.price
-          }else{
-          this.$message.error('请输入你要交易的价格');
-          return
-          }
-        }
+        // if(this.typeRadio == "limit"){
+        //   if(this.price !=null&&this.price !=""){
+        //     message.price = this.price
+        //   }else{
+        //   this.$message.error('请输入你要交易的价格');
+        //   return
+        //   }
+        // }
         //对购买数量进行判断
-        if(this.amount !=null&&this.amount!=""){
-          message.amount = this.amount
-        }else{
-          this.$message.error('请输入你要购买的数量');
-          return
-        }
+        // if(this.amount !=null&&this.amount!=""){
+        //   message.amount = this.amount
+        // }else{
+        //   this.$message.error('请输入你要购买的数量');
+        //   return
+        // }
         //对杠杆倍数进行判断
         if(this.level !=null&this.level!=""){
           message.level = this.level
@@ -192,20 +192,20 @@
           return
         }
         //是否设置了止盈止损
-        if(this.tpSlValue){
-          message.enable_stop_loss = true
-          message.enable_stop_gain = true
-          if(this.tpPrice !=null&this.tpPrice!=""&this.slPrice!=null&this.slPrice!=""){
-            message.tpTriggerPx = this.tpPrice
-            message.slTriggerPx = this.slPrice
-          }else{
-            this.$message.error('请输入止盈止损的价格');
-            return
-          }
-        }else{
-          message.enable_stop_loss = false
-          message.enable_stop_gain = false
-        }
+        // if(this.tpSlValue){
+        //   message.enable_stop_loss = true
+        //   message.enable_stop_gain = true
+        //   if(this.tpPrice !=null&this.tpPrice!=""&this.slPrice!=null&this.slPrice!=""){
+        //     message.tpTriggerPx = this.tpPrice
+        //     message.slTriggerPx = this.slPrice
+        //   }else{
+        //     this.$message.error('请输入止盈止损的价格');
+        //     return
+        //   }
+        // }else{
+        //   message.enable_stop_loss = false
+        //   message.enable_stop_gain = false
+        // }
         //弹框
           this.$confirm(message, 'Alert Message', {
           confirmButtonText: '复制',
@@ -215,6 +215,7 @@
             type: 'success',
             message: '复制成功!'
           });
+          //复制生成的message
           this.copy(JSON.stringify(message))
           console.log("复制内容")
         }).catch(() => {
@@ -236,7 +237,29 @@
         document.execCommand('copy')
         // 删除input元素
         document.body.removeChild(el)
+        },
+      prettyFormat(code) {
+      try {
+        for (const key in code) {
+          if (typeof code[key] === 'function') {
+            let str = code[key];
+            str = str.toString();
+            code[key] = str.replace(/\n/g, '<br/>');
+          }
         }
+        // 设置缩进为2个空格
+        let str = JSON.stringify(code, null, 2);
+        str = str
+          .replace(/&/g, '&')
+          .replace(/</g, '<')
+          .replace(/>/g, '>');
+        // str = str.replace(/\n/g, '/r')
+        return str;
+      } catch (e) {
+        console.error('异常信息:' + e);
+        return '';
+      }
+    }
 
     },
   }
